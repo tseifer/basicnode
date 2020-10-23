@@ -33,15 +33,13 @@ const server = http.createServer((req, res) => {
 		res.writeHead(200, {'Content-Type': 'application/json'})
 		res.end(JSON.stringify(users));
 		
-	} else if (req.url === 'listfiles') {
+	} else if (req.url === '/listfiles') {
 		const publicFolderName = path.join(__dirname, 'public');
 		fs.readdir(publicFolderName, (err, filesList) => {
 			res.writeHead(200, {'Content-Type': 'application/json'});
 			res.write(JSON.stringify(filesList));
 			res.end();
 		});
-		res.writeHead(200, {'Content-Type': 'application/json'})
-		res.end(JSON.stringify(users));
 		
 	}
 	else {
@@ -95,7 +93,7 @@ const server = http.createServer((req, res) => {
 	
 });
 
-const PORT = process.env.PORT || 5000; // search the required port in the environment-variable (For Heroku)
+const PORT = process.env.PORT || 5001; // search the required port in the environment-variable (For Heroku)
 server.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
 });
