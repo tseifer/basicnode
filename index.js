@@ -6,10 +6,15 @@ const fs = require('fs')
 
 const server = http.createServer((req, res) => {
 	console.log(req.url)
+	if (req.url === '/api/getFiles') {
+	
+	}
 	if (req.url === '/') {
 		fs.readFile(path.join(__dirname, 'public', 'index.html'), (err, content) => {
 			if (err) throw err;
 			res.writeHead(200, {'Content-Type': 'text/html'})
+			//res.write('hello world');
+			
 			res.end(content)
 		});
 	}
@@ -28,7 +33,18 @@ const server = http.createServer((req, res) => {
 		res.writeHead(200, {'Content-Type': 'application/json'})
 		res.end(JSON.stringify(users));
 		
-	} else {
+	} else if (req.url === 'listfiles') {
+		const publicFolderName = path.join(__dirname, 'public');
+		fs.readdir(publicFolderName, (err, filesList) => {
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify(filesList));
+			res.end();
+		});
+		res.writeHead(200, {'Content-Type': 'application/json'})
+		res.end(JSON.stringify(users));
+		
+	}
+	else {
 		let filePath = path.join(__dirname, 'public', req.url === '/'? 'index.html' : req.url);
 		//extension of the file
 		let extname = path.extname(filePath);
@@ -53,7 +69,7 @@ const server = http.createServer((req, res) => {
 		console.log('reading ' + filePath)
 		fs.readFile(filePath, (err, content) => {
 			if (err) {
-				if (err.code === 'ENOENT') {
+				if (err.code == 'ENOENT') {
 					// Page not found
 					fs.readFile(path.join(__dirname, 'public', '404.html'), (err, content) => {
 						res.writeHead(200, {'Content-Type': 'text/html'})
@@ -78,6 +94,7 @@ const server = http.createServer((req, res) => {
 	}
 	
 });
+
 const PORT = process.env.PORT || 5000; // search the required port in the environment-variable (For Heroku)
 server.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
