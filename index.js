@@ -23,6 +23,7 @@ const server = http.createServer((req, res) => {
 			res.end(content)
 		});
 	}
+	
 	else if (req.url === '/api/users') {
 		const users = [
 			{name: 'Bob', age: 40},
